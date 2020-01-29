@@ -1,0 +1,15 @@
+[
+    {
+        "pk": "-LhGYo9e_2pNUJCripEH",
+        "model": "authentication.user",
+        "fields":{
+            "username": "froyo",
+            "email": "froyo@almond.com",
+            "is_active": true,
+            "is_superuser": false,
+            "created_at": "2019-06-1 18:00:51.824958+03",
+            "updated_at": "2019-06-1 18:01:51.824958+03",
+            "role_id": "-LgpYBynO_9tV_Xms32_"
+        }
+    }
+]

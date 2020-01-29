@@ -1,0 +1,42 @@
+[
+    {
+        "pk": "-LgpYBynO_9tV_Xms32_",
+        "model": "role.role",
+        "fields":{
+            "title": "Admin",
+            "description": "Kari4me admin"
+        }
+    },
+    {
+        "pk": "-LgpYbY-puCzlUnY6sR0",
+        "model": "role.role",
+        "fields": {
+            "title": "Regular User",
+            "description": "Regular kari4me user"
+        }
+    },
+    {
+        "pk": "-LgpYdeuStTBtU5fsbYc",
+        "model": "role.role",
+        "fields": {
+            "title": "Kari4me Developer",
+            "description": "A member of the Kari4me developer team"
+        }
+    },
+    {
+        "pk": "-LgpYfgFvEK17x8i7Thy",
+        "model": "role.role",
+        "fields": {
+            "title": "Operations",
+            "description": "This role work with Operations staff to complete independent projects and/or provide support"
+        }
+    },
+    {
+        "pk": "-LgpYhvlkFrR28EZjVXd",
+        "model": "role.role",
+        "fields": {
+            "title": "Test Role",
+            "description": "This role is for testing"
+        }
+    }
+]
