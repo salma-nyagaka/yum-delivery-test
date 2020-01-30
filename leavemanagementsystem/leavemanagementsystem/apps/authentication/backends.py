@@ -6,8 +6,6 @@ import logging
 import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils import six
 from rest_framework import exceptions
 from rest_framework.authentication import TokenAuthentication
 

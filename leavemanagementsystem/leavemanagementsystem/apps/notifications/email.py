@@ -6,31 +6,35 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from leavemanagementsystem.apps.authentication.backends import \
-     JWTAuthentication
-
+    JWTAuthentication
 import pdb
-def send_email(request, user):
+
+
+def send_email(request, username, email, start, end, leave_status):
     # sends email with the activation link with the token
-    subject = 'Kari4me activation email'
-    message = 'Please verify your account '
+    subject = 'Notificaiton blah blah'
+    message = 'blah blah'
+    # pdb.set_trace()
     domain = get_current_site(request).domain
-    token = JWTAuthentication.generate_token(user['username'])
+    token = JWTAuthentication.generate_token(username)
     protocol = request.META['SERVER_PROTOCOL'][:4]
-    activation_link = protocol + '://' + domain + '/api/auth/' + token
-    body = render_to_string('verify_account.html', {
-        'link': activation_link,
-        'name': user['username']
+    notification_link = protocol + '://' + domain + '/api/auth/' + token
+    body = render_to_string('notification.html', {
+        'link': notification_link,
+        'name': username,
+        'start': start,
+        'end': end,
+        'status': leave_status
     })
     # pdb.set_trace()
-
     try:
         send_mail(
             subject,
             message,
             settings.EMAIL_HOST_USER,
-            [user['email']],
+            [email],
             html_message=body,
         )
     except Exception:
-        return Response(data={"message": "Email activation failed"},
+        return Response(data={"message": "blah blah failed"},
                         status=status.HTTP_400_BAD_REQUEST)
