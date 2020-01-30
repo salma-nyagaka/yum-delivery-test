@@ -94,20 +94,6 @@ class LoginSerializer(serializers.Serializer):
         email = data.get('email', None)
         password = data.get('password', None)
 
-        # As mentioned above, an email is required. Raise an exception if an
-        # email is not provided.
-        if email is None:
-            raise serializers.ValidationError(
-                'Your email address is required to log in.'
-            )
-
-        # As mentioned above, a password is required. Raise an exception if a
-        # password is not provided.
-        if not password:
-            raise serializers.ValidationError(
-                'Kindly enter your password to log in.'
-            )
-
         # The `authenticate` method is provided by Django and handles checking
         # for a user that matches this email/password combination. Notice how
         # we pass `email` as the `username` value. Remember that, in our User
@@ -117,8 +103,8 @@ class LoginSerializer(serializers.Serializer):
         # `authenticate` will return `None`. Raise an exception in this case.
         if user is None:
             raise serializers.ValidationError(
-                'Either your email or password isn’t right. Double check '
-                'them, or reset your password to log in. '
+                'Either your email or password is not right. Kindly double check '
+                'them '
             )
 
         # Django provides a flag on our `User` model called `is_active`. The
@@ -142,29 +128,6 @@ class LoginSerializer(serializers.Serializer):
             'username': user.username,
             'token': token
         }
-
-
-class ForgotPasswordSerializer(serializers.Serializer):
-    """Serializer for forget password"""
-
-    email = serializers.CharField(max_length=255)
-
-
-class ResetPasswordSerializer(serializers.Serializer):
-    """Serializer for reset password"""
-
-    class Meta:
-        model = User
-        fields = ('password',)
-
-
-class SocialAuthSerializer(serializers.Serializer):
-    """ Accepts provider, access token , and access_token_secret"""
-    provider = serializers.CharField(max_length=255, required=True)
-    access_token = serializers.CharField(
-        max_length=4096, required=True, trim_whitespace=True)
-    access_token_secret = serializers.CharField(
-        max_length=4096, required=False, trim_whitespace=True)
 
 
 class UserSerializer(serializers.ModelSerializer):
