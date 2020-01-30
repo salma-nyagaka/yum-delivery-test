@@ -2,7 +2,6 @@ from django.db import models
 from ..request.models import Request
 from leavemanagementsystem.helpers.fancy_generator import fancy_id_generator
 from leavemanagementsystem import settings
-import pdb
 
 
 class Notification(models.Model):
@@ -44,7 +43,7 @@ class Notification(models.Model):
 
 
 def request_notification(notification, request, email, user, start, end,
-                         description):
+                         description, days):
     """
     This function adds notification to the Notification model
     Checks if the user is in the list to be notified
@@ -52,5 +51,5 @@ def request_notification(notification, request, email, user, start, end,
     notification = Notification.objects.create(
         notification=notification, classification="request", request=request,
         leave_requestor_id=user, email=email, start_date=start,
-        end_date=end, description=description)
+        end_date=end, description=description, number_of_days=days)
     notification.save()
