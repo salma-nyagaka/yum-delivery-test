@@ -8,8 +8,6 @@ from rest_framework.response import Response
 from leavemanagementsystem.apps.authentication.backends import \
      JWTAuthentication
 
-import pdb
-
 
 def send_email(request, user):
     # sends email with the activation link with the token
@@ -23,7 +21,6 @@ def send_email(request, user):
         'link': activation_link,
         'name': user['username']
     })
-    # pdb.set_trace()
 
     try:
         send_mail(
@@ -33,7 +30,6 @@ def send_email(request, user):
             [user['email']],
             html_message=body,
         )
-    except:
-        # pdb.set_trace()
+    except Exception:
         return Response(data={"message": "Email activation failed"},
                         status=status.HTTP_400_BAD_REQUEST)

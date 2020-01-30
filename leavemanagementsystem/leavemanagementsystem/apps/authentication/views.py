@@ -98,7 +98,6 @@ class LoginAPIView(GenericAPIView):
             "id": user.id,
             "email": user.email,
             "username": user.username,
-            "image": user.photo,
             "role_id": user.role_id,
         }
         user_data['token'] = \

@@ -59,15 +59,3 @@ class JWTAuthentication(TokenAuthentication):
         if not user.is_active:
             raise exceptions.AuthenticationFailed('User inactive or deleted')
         return user, payload
-
-
-class TokenGenerator(PasswordResetTokenGenerator):
-    @staticmethod
-    def _generate_hash_value(user, timestamp):
-        return (
-            six.text_type(user.email) + six.text_type(timestamp) +
-            six.text_type(user.is_active)
-        )
-
-
-account_activation_token = TokenGenerator()

@@ -31,6 +31,7 @@ environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '_@9khk3xby@y1c!@v77!rq=)-a)rj1n33wb4&w)rn-t&a99eq3'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -49,8 +50,9 @@ INSTALLED_APPS = [
 
     # local apps
     'leavemanagementsystem.apps.authentication',
-    'leavemanagementsystem.apps.role'
-
+    'leavemanagementsystem.apps.role',
+    'leavemanagementsystem.apps.request',
+    'leavemanagementsystem.apps.notifications'
 ]
 
 MIDDLEWARE = [
@@ -141,3 +143,25 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_SSL = False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+REST_FRAMEWORK = {
+    # 'EXCEPTION_HANDLER': 'carryforme.apps.core.exceptions.core_exception_handler',      # noqa E501
+    'NON_FIELD_ERRORS_KEY': 'error',
+
+    # by default every user should be authenticated
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # specifies a local custom authentication class
+        'leavemanagementsystem.apps.authentication.backends.JWTAuthentication',
+    ),
+
+    # Priority list of parsers for swagger document
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+}

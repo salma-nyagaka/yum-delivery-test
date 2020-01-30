@@ -1,6 +1,6 @@
 from django.db import models
 
-from leavemanagementsystem.helpers.fancy_generator  import fancy_id_generator
+from leavemanagementsystem.helpers.fancy_generator import fancy_id_generator
 
 
 class Role(models.Model):
@@ -13,6 +13,3 @@ class Role(models.Model):
                              blank=True,
                              default='Regular User')
     description = models.CharField(max_length=256, blank=True)
-
-    def __str__(self):
-        return self.title
