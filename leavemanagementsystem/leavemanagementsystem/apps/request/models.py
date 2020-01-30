@@ -23,7 +23,7 @@ class Request(models.Model):
     description = models.CharField(max_length=200, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # number_of_days = models.DateTimeField()
+    number_of_days = models.CharField(default="0", max_length=256, blank=True)
 
     @staticmethod
     def get_request_by_id(request_id):

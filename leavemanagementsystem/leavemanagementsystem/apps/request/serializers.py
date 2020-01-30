@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Request
-import pdb
 
 
 class RequestSerializer(serializers.ModelSerializer):
@@ -9,7 +8,6 @@ class RequestSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(RequestSerializer, self).__init__(*args, **kwargs)
 
-        # Override the default error_messages with a custom field error
         for field in self.fields:
             error_messages = self.fields[field].error_messages
             error_messages['null'] = error_messages['blank'] \
@@ -22,7 +20,7 @@ class RequestSerializer(serializers.ModelSerializer):
     end_date = serializers.DateField(required=False)
     description = serializers.CharField(required=False)
     leave_request = serializers.CharField(required=False)
-    # number_of_days = serializers.DateTimeField(required=False)
+    number_of_days = serializers.CharField(required=False)
 
     class Meta:
         model = Request
@@ -32,6 +30,7 @@ class RequestSerializer(serializers.ModelSerializer):
         """
         Method enables the creation of a request detail.
         """
+        # pdb.set_trace()
         return Request.objects.create(**data)
 
     # def get(self, request):
