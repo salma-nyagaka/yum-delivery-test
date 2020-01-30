@@ -27,4 +27,7 @@ urlpatterns = [
     path('api/',
          include('leavemanagementsystem.apps.notifications.urls',
                  namespace="notifications")),
+    path('api/',
+         include('leavemanagementsystem.apps.approvals.urls',
+                 namespace="approvals")),
 ]

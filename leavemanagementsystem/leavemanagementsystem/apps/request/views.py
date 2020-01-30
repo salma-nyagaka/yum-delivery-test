@@ -57,7 +57,6 @@ class RequestAPIView(GenericAPIView):
         end_date_validation = end.date() < present.date()
 
         leave_duration = end - start
-        # pdb.set_trace()
         request_data = {
             "start_date": start_date,
             "end_date": end_date,
@@ -71,7 +70,6 @@ class RequestAPIView(GenericAPIView):
         serializer = self.serializer_class(data=request_data, context=context)
         serializer.is_valid(raise_exception=True)
 
-        # send_email(request, request_data)
         saved_request = serializer.save()
 
         if start_date_validation or end_date_validation:
@@ -98,7 +96,6 @@ class RequestAPIView(GenericAPIView):
         )
 
     def get(self, request):
-        # pdb.set_trace()
         requests_made = Request.objects.filter(requestor_id=request.user.id)
         serializer = RequestSerializer(requests_made, many=True)
 
@@ -155,7 +152,6 @@ class SingleRequestAPIView(GenericAPIView):
             return Response(message, status=status.HTTP_200_OK)
 
         except Exception:
-            # pdb.set_trace()
             return Response({'message': "Leave request not found."},
                             status=status.HTTP_404_NOT_FOUND)
 

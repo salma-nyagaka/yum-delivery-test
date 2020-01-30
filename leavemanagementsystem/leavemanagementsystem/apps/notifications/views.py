@@ -1,5 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
@@ -17,6 +19,17 @@ from leavemanagementsystem.helpers.endpoint_response import \
 from leavemanagementsystem.apps.authentication.backends import \
     JWTAuthentication
 from leavemanagementsystem.apps.request.models import Request
+from ..approvals.models import approval_notification
+
+
+@receiver(post_save, sender=Notification)
+def notify_hr(sender, instance, **kwargs):
+    """
+    send a message notification upon creation of a trip.
+    """
+    notification_id = instance.id
+    leave_status = instance.status
+    approval_notification(leave_status, notification_id)
 
 
 class NotificationAPIView(APIView):

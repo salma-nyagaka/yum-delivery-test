@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'leavemanagementsystem.apps.authentication',
     'leavemanagementsystem.apps.role',
     'leavemanagementsystem.apps.request',
-    'leavemanagementsystem.apps.notifications'
+    'leavemanagementsystem.apps.notifications',
+    'leavemanagementsystem.apps.approvals'
 ]
 
 MIDDLEWARE = [
