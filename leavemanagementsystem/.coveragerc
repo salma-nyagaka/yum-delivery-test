@@ -1,0 +1,16 @@
+# .coveragerc
+[run]
+source=leavemanagementsystem
+omit =
+    *__init__*
+    tests/*
+    fixtures/*
+    migrations/*
+
+[report]
+show_missing = True
+omit =
+    */python?.?/*
+
+[html]
+directory=html_coverage_report
