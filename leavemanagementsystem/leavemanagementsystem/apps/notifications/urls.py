@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import NotificationAPIView, AcceptRequestAPIView, DeclineRequestAPIView, NotificationActivationAPIView
+from .views import NotificationAPIView, AcceptRequestAPIView, \
+    DeclineRequestAPIView
 
 app_name = 'notification'
 
@@ -13,7 +14,4 @@ urlpatterns = [
     path('notifications/decline/<str:notification_id>',
          (DeclineRequestAPIView.as_view()),
          name='decline_notification'),
-    path('not/<str:token>',
-         (NotificationActivationAPIView.as_view()),
-         name='notification'),
 ]

@@ -9,7 +9,7 @@ from .models import User
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    """Serializers registration requests and creates a new user."""
+    """Serializers of registration request"""
 
     def __init__(self, *args, **kwargs):
         super(RegistrationSerializer, self).__init__(*args, **kwargs)
@@ -21,8 +21,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 = error_messages['required'] \
                 = 'Please fill in the {}.'.format(field)
 
-    email = serializers.RegexField(
-        regex="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$",
+    email = serializers.RegexField(                                         # noqa E501
+        regex="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$", # noqa E501
         validators=[
             validators.UniqueValidator(
                 queryset=User.objects.all(),
@@ -34,7 +34,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     # Ensure that username is unique, does not exist,
     #  cannot be left be blank, has a minimum of 5 characters
     # has alphanumerics only
-    username = serializers.RegexField(
+    username = serializers.RegexField(# noqa E501
         regex='^[A-Za-z\-\_]+\d*$',
         min_length=4,
         max_length=30,
@@ -52,8 +52,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     # Ensure passwords are at least 8 characters long,
     # at least one letter and at least one number
-    password = serializers.RegexField(
-        regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$",
+    password = serializers.RegexField(# noqa E501
+        regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$",  # noqa E501
         max_length=128,
         write_only=True,
         error_messages={
@@ -103,8 +103,7 @@ class LoginSerializer(serializers.Serializer):
         # `authenticate` will return `None`. Raise an exception in this case.
         if user is None:
             raise serializers.ValidationError(
-                'Either your email or password is not right. Kindly double check '
-                'them '
+                'Either your email or password is not right.'
             )
 
         # Django provides a flag on our `User` model called `is_active`. The

@@ -8,10 +8,12 @@ from rest_framework.response import Response
 from leavemanagementsystem.apps.authentication.backends import \
      JWTAuthentication
 
-import pdb
+
 def send_email(request, user):
-    # sends email with the activation link with the token
-    subject = 'Kari4me activation email'
+    """
+    method to send activation email to user account
+    """
+    subject = 'Leave Management System activation email'
     message = 'Please verify your account '
     domain = get_current_site(request).domain
     token = JWTAuthentication.generate_token(user['username'])
@@ -21,7 +23,6 @@ def send_email(request, user):
         'link': activation_link,
         'name': user['username']
     })
-    # pdb.set_trace()
 
     try:
         send_mail(

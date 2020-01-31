@@ -4,28 +4,23 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import AllowAny
 
 
 from .serializers import NotificationSerializer
 from .models import Notification
 from leavemanagementsystem.apps.notifications.email import send_email
 from leavemanagementsystem.apps.authentication.models import User
-from leavemanagementsystem.apps.authentication.renderers import \
-    UserJSONRenderer
 from leavemanagementsystem.helpers.endpoint_response import \
     get_success_responses
-from leavemanagementsystem.apps.authentication.backends import \
-    JWTAuthentication
 from leavemanagementsystem.apps.request.models import Request
+from leavemanagementsystem.apps.role.models import Role
 from ..approvals.models import approval_notification
 
 
 @receiver(post_save, sender=Notification)
 def notify_hr(sender, instance, **kwargs):
     """
-    send a message notification upon creation of a trip.
+    send a message notification upon accepting a request.
     """
     notification_id = instance.id
     leave_status = instance.status
@@ -40,10 +35,17 @@ class NotificationAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
+        """
+        Method to get all leave requests
+        """
+
         notifications = Notification.objects.all()
         serializer = NotificationSerializer(notifications, many=True)
-        # pdb.set_trace()
-        if request.user.is_superuser:
+        role = request.user.role_id
+        role_status = Role.objects.filter(
+            id=role).values_list('title', flat=True)[0]
+
+        if request.user.is_superuser and role_status == 'Manager':
             return get_success_responses(
                 data=serializer.data,
                 message="All notifications have been successfully \
@@ -52,8 +54,8 @@ class NotificationAPIView(APIView):
             )
         else:
             return Response({
-                "error": "You are not allowed to view this content"},
-                status=status.HTTP_404_NOT_FOUND)
+                "error": "Only the HR can view this content"},
+                status=status.HTTP_403_FORBIDDEN)
 
 
 class AcceptRequestAPIView(APIView):
@@ -63,43 +65,35 @@ class AcceptRequestAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def put(self, request, notification_id):
-        if request.user.is_superuser:
+        """
+        Method to accept leave requests
+        """
+        role = request.user.role_id
+        role_status = Role.objects.filter(
+            id=role).values_list('title', flat=True)[0]
+
+        if request.user.is_superuser and role_status == 'Manager':
             notification = Notification.objects.filter(
                 id=notification_id).first()
-            # pdb.set_trace()
             if notification:
-                notification.status = "Accepted"
+                notification.status = "accepted"
                 notification.save()
-                # pdb.set_trace()
 
-                username = User.objects.values_list('username', flat=True).filter(
-                    id=notification.leave_requestor_id).first()
-                email = User.objects.values_list('email', flat=True).filter(
-                    id=notification.leave_requestor_id).first()
-                start_date = Request.objects.values_list(
-                    'start_date', flat=True).filter(id=notification.request_id).first()
-                end_date = Request.objects.values_list(
-                    'end_date', flat=True).filter(id=notification.request_id).first()
-                leave_status = Notification.objects.values_list(
-                    'status', flat=True).filter(id=notification.id).first()
-
-                send_email(
-                    request, username, email, start_date,  end_date, leave_status
-                )
                 message = {
                     "message": "This leave request has been accepted.",
-                    "status": "success"
+                    "status": "The HR department will proceed with\
+                         the leave request process"
                 }
                 return Response(message, status=status.HTTP_200_OK)
             else:
                 return Response({
                     "error": "Leave request notification not found"},
-                    status=status.HTTP_404_NOT_FOUND)
+                    status=status.HTTP_400_BAD_REQUEST)
 
         else:
             return Response({
                 "error": "You are not allowed to perform this action"},
-                status=status.HTTP_404_NOT_FOUND)
+                status=status.HTTP_403_FORBIDDEN)
 
 
 class DeclineRequestAPIView(APIView):
@@ -109,26 +103,39 @@ class DeclineRequestAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def put(self, request, notification_id):
-        if request.user.is_superuser:
+        """
+        Method to decline leave requests
+        """
+        role = request.user.role_id
+        role_status = Role.objects.filter(
+            id=role).values_list('title', flat=True)[0]
+
+        if request.user.is_superuser and role_status == 'Manager':
             notification = Notification.objects.filter(
                 id=notification_id).first()
             if notification:
-                notification.status = "Declined"
+                notification.status = "declined"
                 notification.save()
 
-                username = User.objects.values_list('username', flat=True).filter(
-                    id=notification.leave_requestor_id).first()
-                email = User.objects.values_list('email', flat=True).filter(
-                    id=notification.leave_requestor_id).first()
+                username = User.objects.values_list(
+                    'username', flat=True).filter(
+                        id=notification.leave_requestor_id).first()
+                email = User.objects.values_list(
+                    'email', flat=True).filter(
+                        id=notification.leave_requestor_id).first()
                 start_date = Request.objects.values_list(
-                    'start_date', flat=True).filter(id=notification.request_id).first()
+                    'start_date', flat=True).filter(
+                        id=notification.request_id).first()
                 end_date = Request.objects.values_list(
-                    'end_date', flat=True).filter(id=notification.request_id).first()
+                    'end_date', flat=True).filter(
+                        id=notification.request_id).first()
                 leave_status = Notification.objects.values_list(
-                    'status', flat=True).filter(id=notification.id).first()
+                    'status', flat=True).filter(
+                        id=notification.id).first()
 
                 send_email(
-                    request, username, email, start_date,  end_date, leave_status
+                    request, username, email, start_date,  end_date,
+                    leave_status
                 )
 
                 message = {
@@ -143,26 +150,4 @@ class DeclineRequestAPIView(APIView):
         else:
             return Response({
                 "error": "You are not allowed to perform this action"},
-                status=status.HTTP_404_NOT_FOUND)
-
-
-class NotificationActivationAPIView(GenericAPIView):
-    """Activate a user after mail verification."""
-    permission_classes = (AllowAny,)
-    renderer_classes = (UserJSONRenderer,)
-
-    def get(self, request, token, *args, **kwargs):
-        """ Method for getting user token and activating them. """
-        # After a successful registration, a user is activated through here
-        # The token that was created and sent is decoded to get the user
-        # The user's is_active attribute is then set to true
-        try:
-            data = JWTAuthentication.decode_jwt(token)
-            user = User.objects.get(username=data['userdata'])
-        except Exception:
-            return Response(
-                data={"message": "Activation link is invalid."},
-                status=status.HTTP_400_BAD_REQUEST)
-        user.is_active = True
-        user.save()
-        return redirect('http://127.0.0.1:8000/api/users/verified')
+                status=status.HTTP_403_FORBIDDEN)

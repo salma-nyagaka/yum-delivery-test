@@ -10,7 +10,6 @@ class Request(models.Model):
                           default=fancy_id_generator,
                           primary_key=True,
                           editable=False)
-    leave_request = models.CharField(default="Pending", max_length=200)
     requestor = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,

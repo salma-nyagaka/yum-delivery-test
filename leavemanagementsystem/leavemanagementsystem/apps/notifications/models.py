@@ -27,8 +27,8 @@ class Notification(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(auto_now_add=True)
     description = models.CharField(max_length=256, blank=True)
-    classification = models.TextField(default="trip")
-    status = models.CharField(default="Pending", max_length=256, blank=True)
+    classification = models.TextField(default="leave_requests")
+    status = models.CharField(default="pending", max_length=256, blank=True)
     number_of_days = models.CharField(default="0", max_length=256, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -53,26 +53,3 @@ def request_notification(notification, request, email, user, start, end,
         leave_requestor_id=user, email=email, start_date=start,
         end_date=end, description=description, number_of_days=days)
     notification.save()
-
-
-# class ApproveNotifications(models.Model):
-#     """
-#     Database fields for the approvals
-#     """
-#     id = models.CharField(db_index=True,
-#                           max_length=256,
-#                           default=fancy_id_generator,
-#                           primary_key=True,
-#                           editable=False)
-#     status = models.CharField(default="Pending", max_length=256, blank=True)
-#     notification = models.CharField(default="Pending", max_length=256, blank=True)
-
-
-# def approval_notification(leavestatus):
-#     """
-#     This function adds notification to the Notification model
-#     Checks if the user is in the list to be notified
-#     """
-#     notification = ApproveNotifications.objects.create(
-#         status=leavestatus)
-#     notification.save()

@@ -22,9 +22,7 @@ class JWTAuthentication(TokenAuthentication):
     @staticmethod
     def generate_token(userdata):
         """
-        generate a payload token
-        :param userdata:
-        :return:
+        method to generate a payload token
         """
         secret = settings.SECRET_KEY
         token = jwt.encode({
@@ -33,7 +31,7 @@ class JWTAuthentication(TokenAuthentication):
             'nbf': datetime.datetime.utcnow() + datetime.timedelta(minutes=-5),
             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7)
         }, secret)
-        # decode the byte type token to
+        # decode the byte type token
         token = token.decode('utf-8')
         return token
 

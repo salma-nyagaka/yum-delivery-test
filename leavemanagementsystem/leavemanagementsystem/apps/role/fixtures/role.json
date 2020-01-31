@@ -19,8 +19,8 @@
         "pk": "-LgpYdeuStTBtU5fsbYc",
         "model": "role.role",
         "fields": {
-            "title": "Supervisor",
-            "description": "Leave Management System Supervisor"
+            "title": "HR",
+            "description": "Leave Management Human Resource"
         }
     }
 ]

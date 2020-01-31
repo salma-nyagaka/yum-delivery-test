@@ -53,7 +53,7 @@ class UserManager(BaseUserManager):
 
     def regular_user(self):
         return self.get_queryset().filter(
-            Q(is_staff=False) | (Q(is_staff=True) & Q(trips__isnull=False))
+            Q(is_staff=False) | (Q(is_staff=True) & Q(requests__isnull=False))
         )
 
     def staff(self):
@@ -76,8 +76,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # The `USERNAME_FIELD` property tells us which field we will use to log in.
-    # In this case, we want that to be the username field.
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
@@ -91,7 +89,7 @@ class User(AbstractBaseUser, PermissionsMixin):
              pgettext_lazy("Permission description", "Manage regular users."),
              ),
             ("manage_staff",
-             pgettext_lazy("Permission description", "Manage staff."),
+             pgettext_lazy("Permission description", "Manage the manager."),
              ),
             ("impersonate_users",
              pgettext_lazy("Permission description", "Impersonate users."),

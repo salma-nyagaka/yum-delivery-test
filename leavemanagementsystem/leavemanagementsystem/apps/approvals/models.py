@@ -19,22 +19,8 @@ class AcceptedNotifications(models.Model):
 
 def approval_notification(status, notification_id):
     """
-    This function adds notification to the Notification model
-    Checks if the user is in the list to be notified
+    This function adds notification to the accpeted notification model
     """
     notification = AcceptedNotifications.objects.create(
         notification_id=notification_id)
     notification.save()
-
-
-class ApproveNotifications(models.Model):
-    """
-     Database fields for the leave requests
-    """
-    id = models.CharField(db_index=True,
-                          max_length=256,
-                          default=fancy_id_generator,
-                          primary_key=True,
-                          editable=False)
-    status = models.CharField(default="pending", max_length=100, blank=False)
-    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)

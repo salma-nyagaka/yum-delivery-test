@@ -21,9 +21,8 @@ def create_role(db):
     user_details = {
         "id": "-LgpYbY-puCzlUnY6sR0",
         "title": "Regular User",
-        "description": "Regular kari4me user",
+        "description": "Leave Management System Regular User",
     }
-    # pdb.set_trace()
     user1 = Role.objects.create(**user_details)
     user1.is_active = True  # activate user account
     user1.save()

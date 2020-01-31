@@ -13,6 +13,4 @@ urlpatterns = [
     path('notifications/hr/decline/<str:notification_id>',
          (DeclineRequestAPIView.as_view()),
          name='accept_notifications'),
-
-
 ]

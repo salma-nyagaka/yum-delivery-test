@@ -1,4 +1,3 @@
-import os
 from django.shortcuts import redirect
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -16,14 +15,12 @@ from .serializers import LoginSerializer, RegistrationSerializer
 
 
 class RegistrationAPIView(GenericAPIView):
-    """Register a new user"""
-    # Allow any user (authenticated or not) to hit this endpoint.
     permission_classes = (AllowAny,)
     renderer_classes = (UserJSONRenderer,)
     serializer_class = RegistrationSerializer
 
     def post(self, request, **kwargs):
-        """ Signup a new user """
+        """ Method to signup a new user """
         email, username, password = request.data.get(
             'email', None), request.data.get(
             'username', None), request.data.get('password', None)
@@ -69,7 +66,7 @@ class UserActivationAPIView(GenericAPIView):
         try:
             data = JWTAuthentication.decode_jwt(token)
             user = User.objects.get(username=data['userdata'])
-        except:
+        except Exception:
             return Response(
                 data={"message": "Activation link is invalid."},
                 status=status.HTTP_400_BAD_REQUEST)
@@ -84,7 +81,7 @@ class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
-        """Login a user"""
+        """Method to login a user"""
         email, password = request.data.get('email', None), request.data.get(
             'password', None)
 

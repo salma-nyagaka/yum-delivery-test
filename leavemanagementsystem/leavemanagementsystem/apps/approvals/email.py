@@ -9,11 +9,12 @@ from leavemanagementsystem.apps.authentication.backends import \
     JWTAuthentication
 
 
-def send_email(request, username, email, start, end, leave_status):
-    # sends email with the activation link with the token
+def send_email(request, username, email, start_date, end_date, status_update):
+    """
+    Method to send notification email to users
+    """
     subject = 'Leave update'
     message = 'Status on your leave update'
-    # pdb.set_trace()
     domain = get_current_site(request).domain
     token = JWTAuthentication.generate_token(username)
     protocol = request.META['SERVER_PROTOCOL'][:4]
@@ -21,11 +22,10 @@ def send_email(request, username, email, start, end, leave_status):
     body = render_to_string('notification.html', {
         'link': notification_link,
         'name': username,
-        'start': start,
-        'end': end,
-        'status': leave_status
+        'start': start_date,
+        'end': end_date,
+        'status': status_update
     })
-    # pdb.set_trace()
     try:
         send_mail(
             subject,

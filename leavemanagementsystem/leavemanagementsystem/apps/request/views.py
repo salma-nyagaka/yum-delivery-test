@@ -16,9 +16,10 @@ from .models import Request
 
 
 @receiver(post_save, sender=Request)
-def notify_admin(sender, instance, created, **kwargs):
+def notify_manager(sender, instance, created, **kwargs):
     """
-    send a message notification upon creation of a trip.
+    Method to send a message notification
+    upon creation of a request.
     """
     if created:
         user_id = instance.requestor_id
@@ -43,7 +44,7 @@ class RequestAPIView(GenericAPIView):
     serializer_class = RequestSerializer
 
     def post(self, request):
-        """method for creating the trip"""
+        """Method for making a leave request"""
         start_date, end_date, description, = request.data.get(
             'start_date', None), request.data.get(
             'end_date', None), request.data.get('description', None),
@@ -77,8 +78,8 @@ class RequestAPIView(GenericAPIView):
                 than today"},
                             status=status.HTTP_400_BAD_REQUEST)
         elif end < start:
-            return Response({"message": "End date should be greator \
-                than start date"},
+            return Response({"message": "End date of leave should be greator \
+                than start date of the leave requested"},
                             status=status.HTTP_400_BAD_REQUEST)
 
         return get_success_responses(
@@ -87,7 +88,6 @@ class RequestAPIView(GenericAPIView):
                 "requestor": request.user.id,
                 "start_date": saved_request.start_date,
                 "end_date": saved_request.end_date,
-                "leave_request": saved_request.leave_request,
                 "description": saved_request.description,
                 "number_of_days": saved_request.number_of_days
             },
@@ -96,6 +96,7 @@ class RequestAPIView(GenericAPIView):
         )
 
     def get(self, request):
+        """Method for getting all requests"""
         requests_made = Request.objects.filter(requestor_id=request.user.id)
         serializer = RequestSerializer(requests_made, many=True)
 
@@ -113,9 +114,10 @@ class SingleRequestAPIView(GenericAPIView):
     serializer_class = RequestSerializer
 
     def get(self, request, request_id):
-        """
-        Method for getting one trip detail.
-        """
+        """Method for getting one request detail."""
+
+        # import pdb
+        # pdb.set_trace()
         try:
             request_made = Request.get_request_by_id(request_id=request_id)
             request_data = {
@@ -123,7 +125,6 @@ class SingleRequestAPIView(GenericAPIView):
                 "requestor": request_made.id,
                 "start_date": request_made.start_date,
                 "end_date": request_made.end_date,
-                "leave_request": request_made.leave_request,
                 "description": request_made.description,
             }
             return get_success_responses(
@@ -134,9 +135,7 @@ class SingleRequestAPIView(GenericAPIView):
                             status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, request_id):
-        """
-        Delete a specific leave request.
-        """
+        """Method for deleting a specific leave request."""
         try:
             leave_request = Request.get_request_by_id(request_id=request_id)
             if leave_request:
@@ -156,10 +155,7 @@ class SingleRequestAPIView(GenericAPIView):
                             status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, request_id):
-        """
-        Method for editing leave request details.
-        """
-        # A leave request should be edited by the person who created it only.
+        """Method for editing leave request details."""
         try:
             leave_request = Request.get_request_by_id(request_id=request_id)
             if request.user.id != leave_request.requestor_id:

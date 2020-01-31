@@ -27,7 +27,7 @@ missing_password_login = update_login_details("password", None)
 invalid_login_email_response = {
     "response": {
         "error": [
-            "Either your email or password is not right. Kindly double check them "
+            "Either your email or password is not right."
         ]
     }
 }
