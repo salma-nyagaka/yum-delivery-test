@@ -26,7 +26,7 @@ django-rest-swagger==2.1.0
 django-safedelete==0.5.2
 django-stubs==0.10.2
 django-versatileimagefield==1.10
-djangorestframework==3.9.0
+djangorestframework==3.11.2
 djangorestframework-stubs==0.4.2
 entrypoints==0.3
 environ==1.0
